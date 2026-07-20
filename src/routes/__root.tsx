@@ -77,20 +77,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "فروشگاه آسیا | خرید آیفون در اراک با قیمت روز" },
+      { title: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
       {
         name: "description",
         content:
-          "فروشگاه آسیا اراک، ارائه‌دهنده انواع گوشی‌های آیفون اپل با قیمت روز، ضمانت اصالت و ارسال به سراسر ایران.",
+          "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک.",
       },
       { name: "author", content: "فروشگاه آسیا" },
-      { property: "og:title", content: "فروشگاه آسیا | خرید آیفون در اراک" },
+      { property: "og:title", content: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
       {
         property: "og:description",
-        content: "خرید آیفون با قیمت روز، ضمانت اصالت کالا، مشاوره رایگان تخصصی در اراک.",
+        content: "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
+      { name: "twitter:description", content: "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7c9f384-9b8f-4377-8504-3c341a30b29f/id-preview-8365288e--7dcb9b1c-63e9-486d-abdd-de862d1c3d16.lovable.app-1784574407696.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7c9f384-9b8f-4377-8504-3c341a30b29f/id-preview-8365288e--7dcb9b1c-63e9-486d-abdd-de862d1c3d16.lovable.app-1784574407696.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
