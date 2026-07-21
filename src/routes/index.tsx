@@ -3,6 +3,7 @@ import { ArrowLeft, Shield, Truck, Headphones, Award, Sparkles, TrendingUp } fro
 import heroImg from "@/assets/hero-iphone.jpg";
 import { SiteLayout } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
+import { ReviewsSection } from "@/components/reviews-section";
 import { getFeatured } from "@/lib/products";
 import { siteConfig } from "@/lib/site-config";
 
@@ -121,6 +122,9 @@ function Home() {
           ))}
         </div>
       </section>
+
+      {/* REVIEWS */}
+      <ReviewsSection />
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">

@@ -85,10 +85,11 @@ function ContactPage() {
 
             <div className="overflow-hidden rounded-3xl border border-border shadow-card">
               <iframe
-                title="نقشه فروشگاه آسیا"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=49.6650%2C34.0850%2C49.7150%2C34.1150&layer=mapnik&marker=34.1000%2C49.6900"
+                title="نقشه موقعیت فروشگاه آسیا در اراک"
+                src="https://www.google.com/maps?q=Arak,Iran&z=13&output=embed"
                 className="h-72 w-full"
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </div>

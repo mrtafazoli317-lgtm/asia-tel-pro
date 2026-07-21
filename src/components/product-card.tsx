@@ -1,4 +1,5 @@
-import { Phone, MessageCircle, Cpu, Camera, HardDrive, Monitor, CheckCircle2, XCircle } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Phone, MessageCircle, Cpu, Camera, HardDrive, Monitor, CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
 import { formatPrice, type Product } from "@/lib/products";
 import { siteConfig } from "@/lib/site-config";
 
@@ -8,7 +9,7 @@ export function ProductCard({ product }: { product: Product }) {
   )}`;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
+    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card/80 shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
       {/* Visual */}
       <div className={`relative aspect-[4/3] overflow-hidden bg-gradient-to-br ${product.color}`}>
         <div className="absolute inset-0 flex items-center justify-center">
@@ -41,7 +42,13 @@ export function ProductCard({ product }: { product: Product }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-lg font-extrabold text-foreground">{product.name}</h3>
+        <Link
+          to="/products/$id"
+          params={{ id: product.id }}
+          className="text-lg font-extrabold text-foreground transition hover:text-primary"
+        >
+          {product.name}
+        </Link>
         <p className="mt-0.5 text-xs text-muted-foreground">{product.series} · {product.year}</p>
 
         <ul className="mt-4 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
@@ -50,6 +57,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Spec icon={<Monitor className="h-3.5 w-3.5" />} text={product.display} />
           <Spec icon={<Camera className="h-3.5 w-3.5" />} text={product.camera} />
         </ul>
+
 
         <div className="mt-5 flex items-end justify-between">
           <div>
@@ -78,6 +86,14 @@ export function ProductCard({ product }: { product: Product }) {
             <MessageCircle className="h-4 w-4" /> واتساپ
           </a>
         </div>
+
+        <Link
+          to="/products/$id"
+          params={{ id: product.id }}
+          className="mt-3 inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:underline"
+        >
+          مشاهده جزئیات <ArrowLeft className="h-3.5 w-3.5" />
+        </Link>
       </div>
     </article>
   );
