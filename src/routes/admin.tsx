@@ -20,13 +20,13 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const items = [
+const items: Array<{ to: string; label: string; icon: typeof LayoutDashboard; end?: boolean }> = [
   { to: "/admin", label: "داشبورد", icon: LayoutDashboard, end: true },
   { to: "/admin/products", label: "محصولات و قیمت‌ها", icon: Smartphone },
   { to: "/admin/banners", label: "بنرها", icon: ImageIcon },
   { to: "/admin/blog", label: "مقالات بلاگ", icon: FileText },
   { to: "/admin/settings", label: "اطلاعات تماس", icon: Phone },
-] as const;
+];
 
 function AdminLayout() {
   const { user, isAdmin, loading } = useAuth();
