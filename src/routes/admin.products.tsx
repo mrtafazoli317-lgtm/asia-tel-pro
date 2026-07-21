@@ -174,7 +174,7 @@ function ProductModal({
   error: string | null;
 }) {
   const [p, setP] = useState(value);
-  const isNew = !value.id || !value.updated_at;
+  const isNew = !value.id;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 grid place-items-center p-4">
