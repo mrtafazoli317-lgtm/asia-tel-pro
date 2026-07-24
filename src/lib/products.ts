@@ -122,6 +122,11 @@ const rawProducts: Omit<Product, "image">[] = [
   { id: "iphone-11", name: "آیفون ۱۱", series: "iPhone 11", year: 2019, price: T(14_000_000), inStock: true, storage: "۶۴ گیگابایت", display: "۶.۱ اینچ Liquid Retina", chip: "A13 Bionic", camera: "دوگانه ۱۲ مگاپیکسل", color: "from-red-500 to-orange-500" },
 ];
 
+export const products: Product[] = rawProducts.map((p) => ({
+  ...p,
+  image: IMG[p.id],
+}));
+
 export function formatPrice(toman: number): string {
   return toman.toLocaleString("fa-IR") + " تومان";
 }
@@ -133,3 +138,4 @@ export function getProducts(): Product[] {
 export function getFeatured(): Product[] {
   return products.filter((p) => p.featured);
 }
+
