@@ -115,12 +115,3 @@ function Spec({ icon, text }: { icon: React.ReactNode; text: string }) {
   );
 }
 
-function PhoneShape() {
-  return (
-    <div className="relative h-[75%] w-[42%] rounded-[2rem] bg-black/25 backdrop-blur-sm ring-1 ring-white/20 shadow-2xl">
-      <div className="absolute inset-1.5 rounded-[1.7rem] bg-gradient-to-br from-white/10 to-transparent" />
-      <div className="absolute left-1/2 top-2 h-1.5 w-14 -translate-x-1/2 rounded-full bg-black/50" />
-      <div className="absolute right-3 top-3 h-10 w-10 rounded-2xl bg-black/40 ring-1 ring-white/10" />
-    </div>
-  );
-}
