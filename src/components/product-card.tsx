@@ -12,9 +12,15 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card/80 shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
       {/* Visual */}
       <div className={`relative aspect-[4/3] overflow-hidden bg-gradient-to-br ${product.color}`}>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <PhoneShape />
-        </div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_65%)]" />
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="absolute inset-0 h-full w-full object-contain p-4 drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
+        />
         <div className="absolute top-3 right-3 flex flex-col gap-2">
           {product.oldPrice && (
             <span className="rounded-full bg-destructive px-2.5 py-1 text-[10px] font-bold text-white">
@@ -39,6 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </div>
       </div>
+
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
