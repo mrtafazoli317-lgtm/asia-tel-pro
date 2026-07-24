@@ -89,14 +89,15 @@ function ProductDetailPage() {
         <div className="grid gap-10 lg:grid-cols-2">
           {/* Visual */}
           <div className={`relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br ${product.color} aspect-square shadow-elevated`}>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_60%)]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-[70%] w-[38%] rounded-[3rem] bg-black/25 backdrop-blur-md ring-1 ring-white/25 shadow-2xl">
-                <div className="absolute inset-2 rounded-[2.5rem] bg-gradient-to-br from-white/15 to-transparent" />
-                <div className="absolute left-1/2 top-3 h-2 w-16 -translate-x-1/2 rounded-full bg-black/60" />
-                <div className="absolute right-4 top-4 h-14 w-14 rounded-[1.5rem] bg-black/50 ring-1 ring-white/15" />
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_65%)]" />
+            <img
+              src={product.image}
+              alt={product.name}
+              width={1024}
+              height={1024}
+              className="absolute inset-0 h-full w-full object-contain p-8 drop-shadow-2xl"
+            />
+
             <div className="absolute top-5 right-5 flex flex-col gap-2">
               {product.featured && (
                 <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-primary">پرفروش</span>
