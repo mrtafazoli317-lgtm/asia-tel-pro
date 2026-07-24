@@ -79,7 +79,7 @@ const IMG: Record<string, string> = {
 };
 
 
-export const products: Product[] = [
+const rawProducts: Omit<Product, "image">[] = [
   // iPhone 17 series
   { id: "iphone-17-pro-max", name: "آیفون ۱۷ پرو مکس", series: "iPhone 17", year: 2025, price: T(115_000_000), inStock: true, storage: "۲۵۶ گیگابایت", display: "۶.۹ اینچ Super Retina XDR", chip: "A19 Pro", camera: "سه‌گانه ۴۸ مگاپیکسل", color: "from-slate-900 to-slate-700", featured: true },
   { id: "iphone-17-pro", name: "آیفون ۱۷ پرو", series: "iPhone 17", year: 2025, price: T(98_000_000), inStock: true, storage: "۲۵۶ گیگابایت", display: "۶.۳ اینچ Super Retina XDR", chip: "A19 Pro", camera: "سه‌گانه ۴۸ مگاپیکسل", color: "from-neutral-800 to-neutral-600", featured: true },
