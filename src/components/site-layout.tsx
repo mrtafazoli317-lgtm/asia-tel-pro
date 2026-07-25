@@ -48,10 +48,11 @@ function Header() {
         <div className="hidden items-center gap-2 lg:flex">
           <a
             href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+            dir="ltr"
             className="inline-flex items-center gap-2 rounded-full gradient-brand px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-105"
           >
             <Phone className="h-4 w-4" />
-            {siteConfig.phoneDisplay}
+            <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{siteConfig.phoneDisplay}</span>
           </a>
         </div>
 
