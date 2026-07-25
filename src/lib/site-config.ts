@@ -8,16 +8,16 @@ export const siteConfig = {
   description:
     "ارائه‌دهنده انواع گوشی‌های آیفون با ضمانت اصالت، قیمت روز و مشاوره تخصصی رایگان.",
   city: "اراک، ایران",
-  address: "اراک، خیابان امام خمینی، پاساژ مرکزی، طبقه دوم",
-  phone: "+98 991 609 0254",
-  phoneDisplay: "۰۹۹۱ ۶۰۹ ۰۲۵۴",
-  whatsapp: "989916090254",
+  address: "اراک",
+  phone: "+98 933 565 8051",
+  phoneDisplay: "۰۹۳۳ ۵۶۵ ۸۰۵۱",
+  whatsapp: "989335658051",
   email: "info@asia-mobile.ir",
   workingHours: "شنبه تا پنجشنبه ۱۰ صبح تا ۹ شب",
   socials: {
     instagram: "https://instagram.com/",
     telegram: "https://t.me/",
-    whatsapp: "https://wa.me/989916090254",
+    whatsapp: "https://wa.me/989335658051",
   },
 } as const;
 
