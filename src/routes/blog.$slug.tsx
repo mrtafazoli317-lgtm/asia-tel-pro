@@ -74,7 +74,7 @@ function BlogPostPage() {
         </div>
 
         <div className="mt-8 space-y-5 text-[15px] leading-8 text-foreground/90">
-          {post.content.map((para, i) => (
+          {post.content.map((para: string, i: number) => (
             <p key={i}>{para}</p>
           ))}
         </div>
