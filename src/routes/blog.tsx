@@ -1,68 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Newspaper, Clock, ArrowLeft } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Clock, ArrowLeft } from "lucide-react";
 import { SiteLayout } from "@/components/site-layout";
 import { PageHero } from "./products";
+import { blogPosts } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
       { title: "بلاگ | فروشگاه آسیا" },
       { name: "description", content: "مقالات، اخبار و راهنماهای خرید آیفون در بلاگ فروشگاه آسیا." },
+      { property: "og:title", content: "بلاگ فروشگاه آسیا" },
+      { property: "og:description", content: "جدیدترین مقالات دنیای اپل و راهنماهای خرید آیفون." },
     ],
   }),
   component: BlogPage,
 });
-
-const posts = [
-  {
-    id: 1,
-    title: "معرفی کامل آیفون ۱۷ پرو مکس؛ نسل جدید پرچمداران اپل",
-    excerpt: "بررسی تخصصی طراحی، عملکرد و دوربین جدیدترین گوشی اپل و مقایسه با نسل قبل.",
-    category: "بررسی محصول",
-    time: "۸ دقیقه مطالعه",
-    color: "from-slate-800 to-slate-600",
-  },
-  {
-    id: 2,
-    title: "راهنمای جامع خرید آیفون دست‌دوم؛ چه نکاتی را بررسی کنیم؟",
-    excerpt: "قبل از خرید آیفون کارکرده حتماً این چک‌لیست را دنبال کنید تا خرید مطمئنی داشته باشید.",
-    category: "راهنمای خرید",
-    time: "۶ دقیقه مطالعه",
-    color: "from-orange-500 to-amber-500",
-  },
-  {
-    id: 3,
-    title: "مقایسه آیفون ۱۵ پرو مکس و آیفون ۱۶ پرو مکس",
-    excerpt: "دو پرچمدار اپل زیر ذره‌بین؛ کدام یک ارزش خرید بیشتری دارد؟",
-    category: "مقایسه",
-    time: "۵ دقیقه مطالعه",
-    color: "from-indigo-600 to-purple-700",
-  },
-  {
-    id: 4,
-    title: "آموزش انتقال اطلاعات از اندروید به آیفون",
-    excerpt: "به سادگی و بدون از دست دادن اطلاعات، به دنیای iOS مهاجرت کنید.",
-    category: "آموزش",
-    time: "۴ دقیقه مطالعه",
-    color: "from-emerald-500 to-teal-600",
-  },
-  {
-    id: 5,
-    title: "بهترین لوازم جانبی برای آیفون شما",
-    excerpt: "از قاب و محافظ صفحه تا شارژرهای مگ‌سیف؛ لیستی از بهترین‌ها.",
-    category: "لوازم جانبی",
-    time: "۷ دقیقه مطالعه",
-    color: "from-rose-500 to-pink-600",
-  },
-  {
-    id: 6,
-    title: "نکات مهم درباره باتری آیفون و افزایش عمر آن",
-    excerpt: "با رعایت این نکات ساده، سلامت باتری گوشی خود را بیشتر حفظ کنید.",
-    category: "نکات فنی",
-    time: "۵ دقیقه مطالعه",
-    color: "from-cyan-500 to-blue-600",
-  },
-];
 
 function BlogPage() {
   return (
@@ -71,16 +23,23 @@ function BlogPage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
-            <article
-              key={p.id}
+          {blogPosts.map((p) => (
+            <Link
+              key={p.slug}
+              to="/blog/$slug"
+              params={{ slug: p.slug }}
               className="group overflow-hidden rounded-3xl border border-border bg-card shadow-card transition hover:-translate-y-1 hover:shadow-elevated"
             >
-              <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.color}`}>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Newspaper className="h-16 w-16 text-white/40" />
-                </div>
-                <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-primary">
+              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  width={1024}
+                  height={640}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-primary shadow">
                   {p.category}
                 </span>
               </div>
@@ -97,7 +56,7 @@ function BlogPage() {
                   ادامه مطلب <ArrowLeft className="h-4 w-4" />
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
