@@ -46,7 +46,7 @@ function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <a
+          
             href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
             dir="ltr"
             className="inline-flex items-center gap-2 rounded-full gradient-brand px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-105"
@@ -78,7 +78,7 @@ function Header() {
                 {item.label}
               </Link>
             ))}
-            <a
+            
               href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
               className="mt-2 flex items-center justify-center gap-2 rounded-xl gradient-brand px-4 py-3 text-sm font-semibold text-white"
             >
@@ -98,7 +98,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <Logo className="[&_span]:text-white" />
+            <Logo variant="white" />
             <p className="mt-4 max-w-md text-sm leading-7 text-white/70">
               {siteConfig.description} در فروشگاه آسیا اراک، بهترین قیمت‌های روز
               آیفون به‌همراه ضمانت اصالت و مشاوره تخصصی رایگان در انتظار شماست.
@@ -162,7 +162,7 @@ function Footer() {
 function FloatingContact() {
   return (
     <div className="fixed bottom-5 left-5 z-30 flex flex-col gap-3">
-      <a
+      
         href={siteConfig.socials.whatsapp}
         target="_blank"
         rel="noopener"
@@ -171,7 +171,7 @@ function FloatingContact() {
       >
         <MessageCircle className="h-6 w-6" />
       </a>
-      <a
+      
         href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
         className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-glow transition-transform hover:scale-110"
         aria-label="تماس"
