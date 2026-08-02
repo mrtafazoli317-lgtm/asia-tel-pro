@@ -1,227 +1,114 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
-import { Menu, X, Phone, MessageCircle, MapPin, Mail, Instagram, Send, User, ShoppingCart } from "lucide-react";
-import { Logo } from "./logo";
-import { siteConfig, nav } from "@/lib/site-config";
-import { useCart } from "@/lib/cart-context";
+import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2, CheckCircle2 } from "lucide-react";
 
-export function SiteLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>{children}</main>
-      <Footer />
-      <FloatingContact />
-    </div>
-  );
-}
+export function OrderForm({ productId, productName }: { productId: string; productName: string }) {
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-function Header() {
-  const [open, setOpen] = useState(false);
-  const { location } = useRouterState();
-  const { count: cartCount } = useCart();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setLoggedIn(!!data.session));
+  }, []);
 
-  return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="shrink-0">
-          <Logo />
-        </Link>
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setErr(null);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData.session?.user.id;
+      if (!userId) throw new Error("ابتدا وارد حساب کاربری خود شوید");
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {nav.map((item) => {
-            const active = location.pathname === item.to;
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+      const { error } = await supabase.from("orders").insert({
+        user_id: userId,
+        product_id: productId,
+        product_name: productName,
+        customer_name: name,
+        customer_phone: phone,
+        note: note || null,
+      });
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            to="/account/dashboard"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
-            aria-label="حساب کاربری"
-          >
-            <User className="h-4.5 w-4.5" />
-          </Link>
-          <Link
-            to="/cart"
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
-            aria-label="سبد خرید"
-          >
-            <ShoppingCart className="h-4.5 w-4.5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-          <a
-            href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
-            dir="ltr"
-            className="inline-flex items-center gap-2 rounded-full gradient-brand px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-105"
-          >
-            <Phone className="h-4 w-4" />
-            <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{siteConfig.phoneDisplay}</span>
-          </a>
-        </div>
+      if (error) throw error;
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border lg:hidden"
-          aria-label="منو"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+      setDone(true);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : "خطا در ثبت سفارش");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (loggedIn === null) return null;
+
+  if (!loggedIn) {
+    return (
+      <div className="mt-4 rounded-2xl border border-dashed border-border p-5 text-center text-sm text-muted-foreground">
+        برای ثبت سفارش آنلاین ابتدا{" "}
+        <Link to="/account" className="font-semibold text-primary hover:underline">
+          وارد حساب کاربری
+        </Link>{" "}
+        شوید.
       </div>
+    );
+  }
 
-      {open && (
-        <div className="border-t border-border bg-background lg:hidden">
-          <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="block rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              to="/account/dashboard"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
-            >
-              <User className="h-4 w-4" />
-              حساب کاربری من
-            </Link>
-            <Link
-              to="/cart"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
-            >
-              <span className="flex items-center gap-2">
-                <ShoppingCart className="h-4 w-4" />
-                سبد خرید
-              </span>
-              {cartCount > 0 && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            <a
-              href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
-              className="mt-2 flex items-center justify-center gap-2 rounded-xl gradient-brand px-4 py-3 text-sm font-semibold text-white"
-            >
-              <Phone className="h-4 w-4" />
-              تماس فوری
-            </a>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="mt-24 border-t border-border bg-ink text-white/85">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <Logo variant="white" />
-            <p className="mt-4 max-w-md text-sm leading-7 text-white/70">
-              {siteConfig.description} در فروشگاه آسیا اراک، بهترین قیمت‌های روز
-              آیفون به‌همراه ضمانت اصالت و مشاوره تخصصی رایگان در انتظار شماست.
-            </p>
-            <div className="mt-6 flex items-center gap-3">
-              <a href={siteConfig.socials.instagram} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="اینستاگرام">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href={siteConfig.socials.telegram} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="تلگرام">
-                <Send className="h-5 w-5" />
-              </a>
-              <a href={siteConfig.socials.whatsapp} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="واتساپ">
-                <MessageCircle className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="mb-4 text-sm font-bold text-white">دسترسی سریع</h4>
-            <ul className="space-y-2 text-sm">
-              {nav.map((n) => (
-                <li key={n.to}>
-                  <Link to={n.to} className="text-white/70 transition hover:text-primary">
-                    {n.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="mb-4 text-sm font-bold text-white">تماس با ما</h4>
-            <ul className="space-y-3 text-sm text-white/70">
-              <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>{siteConfig.address}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-primary" />
-                <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} dir="ltr">
-                  {siteConfig.phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 shrink-0 text-primary" />
-                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row">
-          <p>© {new Date().getFullYear()} فروشگاه آسیا — تمامی حقوق محفوظ است.</p>
-          <p>طراحی شده با ❤ در اراک</p>
-        </div>
+  if (done) {
+    return (
+      <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-5 text-sm font-medium text-emerald-700">
+        <CheckCircle2 className="h-5 w-5 shrink-0" />
+        سفارش شما ثبت شد. کارشناسان ما به‌زودی با شما تماس می‌گیرند.
       </div>
-    </footer>
-  );
-}
+    );
+  }
 
-function FloatingContact() {
   return (
-    <div className="fixed bottom-5 left-5 z-30 flex flex-col gap-3">
-      <a
-        href={siteConfig.socials.whatsapp}
-        target="_blank"
-        rel="noopener"
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-elevated transition-transform hover:scale-110"
-        aria-label="واتساپ"
+    <form onSubmit={submit} className="mt-4 space-y-3 rounded-2xl border border-border bg-card p-5 shadow-card">
+      <h3 className="font-bold text-foreground">ثبت سفارش آنلاین</h3>
+      <div>
+        <input
+          type="text"
+          required
+          placeholder="نام و نام خانوادگی"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+      <div>
+        <input
+          type="tel"
+          required
+          dir="ltr"
+          placeholder="شماره موبایل"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+      <div>
+        <textarea
+          placeholder="توضیحات (اختیاری)"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={2}
+          className="w-full resize-none rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+      {err && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{err}</p>}
+      <button
+        type="submit"
+        disabled={busy}
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl gradient-brand px-5 py-3 text-sm font-bold text-white shadow-glow hover:opacity-95 disabled:opacity-60"
       >
-        <MessageCircle className="h-6 w-6" />
-      </a>
-      <a
-        href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
-        className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-glow transition-transform hover:scale-110"
-        aria-label="تماس"
-      >
-        <Phone className="h-6 w-6" />
-      </a>
-    </div>
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+        ثبت سفارش
+      </button>
+    </form>
   );
 }
