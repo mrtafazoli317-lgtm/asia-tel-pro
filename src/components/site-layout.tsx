@@ -1,140 +1,227 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
+import { Menu, X, Phone, MessageCircle, MapPin, Mail, Instagram, Send, User, ShoppingCart } from "lucide-react";
+import { Logo } from "./logo";
+import { siteConfig, nav } from "@/lib/site-config";
+import { useCart } from "@/lib/cart-context";
 
-import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { CartProvider } from "../lib/cart-context";
-
-function NotFoundComponent() {
+export function SiteLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-gradient">۴۰۴</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">صفحه یافت نشد</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          صفحه‌ای که به دنبال آن هستید وجود ندارد یا جابجا شده است.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md gradient-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-105"
-          >
-            بازگشت به خانه
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>{children}</main>
+      <Footer />
+      <FloatingContact />
     </div>
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
-  const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+function Header() {
+  const [open, setOpen] = useState(false);
+  const { location } = useRouterState();
+  const { count: cartCount } = useCart();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          صفحه بارگذاری نشد
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          مشکلی پیش آمد. لطفاً دوباره تلاش کنید یا به صفحه اصلی بازگردید.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md gradient-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="shrink-0">
+          <Logo />
+        </Link>
+
+        <nav className="hidden items-center gap-1 lg:flex">
+          {nav.map((item) => {
+            const active = location.pathname === item.to;
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            to="/account/dashboard"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            aria-label="حساب کاربری"
           >
-            تلاش دوباره
-          </button>
+            <User className="h-4.5 w-4.5" />
+          </Link>
+          <Link
+            to="/cart"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            aria-label="سبد خرید"
+          >
+            <ShoppingCart className="h-4.5 w-4.5" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                {cartCount}
+              </span>
+            )}
+          </Link>
           <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent"
+            href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+            dir="ltr"
+            className="inline-flex items-center gap-2 rounded-full gradient-brand px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-105"
           >
-            خانه
+            <Phone className="h-4 w-4" />
+            <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{siteConfig.phoneDisplay}</span>
           </a>
         </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border lg:hidden"
+          aria-label="منو"
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
+
+      {open && (
+        <div className="border-t border-border bg-background lg:hidden">
+          <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
+            {nav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              to="/account/dashboard"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
+            >
+              <User className="h-4 w-4" />
+              حساب کاربری من
+            </Link>
+            <Link
+              to="/cart"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
+            >
+              <span className="flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4" />
+                سبد خرید
+              </span>
+              {cartCount > 0 && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            <a
+              href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+              className="mt-2 flex items-center justify-center gap-2 rounded-xl gradient-brand px-4 py-3 text-sm font-semibold text-white"
+            >
+              <Phone className="h-4 w-4" />
+              تماس فوری
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="mt-24 border-t border-border bg-ink text-white/85">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-4">
+          <div className="md:col-span-2">
+            <Logo variant="white" />
+            <p className="mt-4 max-w-md text-sm leading-7 text-white/70">
+              {siteConfig.description} در فروشگاه آسیا اراک، بهترین قیمت‌های روز
+              آیفون به‌همراه ضمانت اصالت و مشاوره تخصصی رایگان در انتظار شماست.
+            </p>
+            <div className="mt-6 flex items-center gap-3">
+              <a href={siteConfig.socials.instagram} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="اینستاگرام">
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a href={siteConfig.socials.telegram} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="تلگرام">
+                <Send className="h-5 w-5" />
+              </a>
+              <a href={siteConfig.socials.whatsapp} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-primary" aria-label="واتساپ">
+                <MessageCircle className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-sm font-bold text-white">دسترسی سریع</h4>
+            <ul className="space-y-2 text-sm">
+              {nav.map((n) => (
+                <li key={n.to}>
+                  <Link to={n.to} className="text-white/70 transition hover:text-primary">
+                    {n.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-sm font-bold text-white">تماس با ما</h4>
+            <ul className="space-y-3 text-sm text-white/70">
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>{siteConfig.address}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 shrink-0 text-primary" />
+                <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} dir="ltr">
+                  {siteConfig.phone}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 shrink-0 text-primary" />
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row">
+          <p>© {new Date().getFullYear()} فروشگاه آسیا — تمامی حقوق محفوظ است.</p>
+          <p>طراحی شده با ❤ در اراک</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function FloatingContact() {
+  return (
+    <div className="fixed bottom-5 left-5 z-30 flex flex-col gap-3">
+      <a
+        href={siteConfig.socials.whatsapp}
+        target="_blank"
+        rel="noopener"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-elevated transition-transform hover:scale-110"
+        aria-label="واتساپ"
+      >
+        <MessageCircle className="h-6 w-6" />
+      </a>
+      <a
+        href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+        className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-glow transition-transform hover:scale-110"
+        aria-label="تماس"
+      >
+        <Phone className="h-6 w-6" />
+      </a>
     </div>
-  );
-}
-
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
-      {
-        name: "description",
-        content:
-          "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک.",
-      },
-      { name: "author", content: "فروشگاه آسیا" },
-      { property: "og:title", content: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
-      {
-        property: "og:description",
-        content: "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "فروشگاه آسیا | مرجع تخصصی خرید آیفون در اراک" },
-      { name: "twitter:description", content: "خرید آنلاین انواع آیفون ۱۱ تا ۱۷ پرو مکس با قیمت روز، ضمانت اصالت و ارسال سریع از فروشگاه آسیا اراک." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7c9f384-9b8f-4377-8504-3c341a30b29f/id-preview-8365288e--7dcb9b1c-63e9-486d-abdd-de862d1c3d16.lovable.app-1784574407696.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7c9f384-9b8f-4377-8504-3c341a30b29f/id-preview-8365288e--7dcb9b1c-63e9-486d-abdd-de862d1c3d16.lovable.app-1784574407696.png" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap",
-      },
-    ],
-  }),
-  shellComponent: RootShell,
-  component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
-});
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="fa" dir="rtl">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <Outlet />
-      </CartProvider>
-    </QueryClientProvider>
   );
 }
