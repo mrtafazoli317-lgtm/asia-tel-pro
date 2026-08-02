@@ -12,7 +12,7 @@ export function ProductCard({ product }: { product: Product }) {
   const waLink = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(
     `سلام، در مورد ${product.name} می‌خواستم راهنمایی بگیرم.`,
   )}`;
-.
+
   async function handleAddToCart() {
     if (!loggedIn) {
       navigate({ to: "/account" });
