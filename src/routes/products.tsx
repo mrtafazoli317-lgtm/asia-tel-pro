@@ -5,8 +5,8 @@ import { getProducts } from "@/lib/products";
 
 export const Route = createFileRoute("/products")({
   loader: async () => {
-    const all = await getProducts();
-    return { products: all };
+    const products = await getProducts();
+    return { products };
   },
 
   head: () => ({
@@ -28,7 +28,6 @@ function ProductsPage() {
   return (
     <SiteLayout>
       <div className="mx-auto max-w-6xl px-4 py-8">
-
         <header className="mb-8 text-center">
           <h1 className="mb-2 text-3xl font-black text-foreground">
             محصولات
@@ -38,7 +37,6 @@ function ProductsPage() {
             مشاهده و خرید انواع محصولات اورجینال با بهترین قیمت
           </p>
         </header>
-
 
         <section
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
@@ -51,7 +49,6 @@ function ProductsPage() {
             />
           ))}
         </section>
-
       </div>
     </SiteLayout>
   );
