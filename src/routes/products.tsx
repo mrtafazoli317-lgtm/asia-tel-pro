@@ -3,7 +3,6 @@ import { ProductCard } from "@/components/product-card";
 import { SiteLayout } from "@/components/site-layout";
 import { localProducts } from "@/lib/products";
 
-
 export const Route = createFileRoute("/products")({
   loader: () => {
     return {
@@ -15,6 +14,8 @@ export const Route = createFileRoute("/products")({
     meta: [
       {
         title: "محصولات | آسیا تل پرو",
+        description:
+          "مشاهده و خرید انواع آیفون با بهترین قیمت روز",
       },
     ],
   }),
@@ -31,27 +32,37 @@ function ProductsPage() {
   return (
     <SiteLayout>
 
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto max-w-6xl px-4 py-8">
 
-        <h1 className="mb-8 text-center text-3xl font-black">
-          محصولات
-        </h1>
+        <header className="mb-8 text-center">
+
+          <h1 className="mb-2 text-3xl font-black text-foreground">
+            محصولات
+          </h1>
+
+          <p className="text-base text-muted-foreground">
+            قیمت روز انواع آیفون و محصولات اپل
+          </p>
+
+        </header>
 
 
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          role="list"
+        >
 
           {products.map((product) => (
-
             <ProductCard
               key={product.id}
               product={product}
             />
-
           ))}
 
         </section>
 
-      </div>
+
+      </main>
 
     </SiteLayout>
   );
