@@ -3,7 +3,7 @@ import { ProductCard } from "@/components/product-card";
 import { SiteLayout } from "@/components/site-layout";
 import { localProducts } from "@/lib/products";
 
-export const Route = createFileRoute("/products")({
+export const Route = createFileRoute("/products/$id")({
   loader: () => {
     return {
       products: localProducts,
