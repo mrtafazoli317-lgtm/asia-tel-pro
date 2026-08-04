@@ -25,7 +25,7 @@ import img12Mini from "@/assets/products/iphone-12-mini.png";
 import img11ProMax from "@/assets/products/iphone-11-pro-max.png";
 import img11Pro from "@/assets/products/iphone-11-pro.png";
 import img11 from "@/assets/products/iphone-11.png";
-import { fetchProducts, type ProductRow } from "@/lib/admin-data";
+import type { ProductRow } from "@/lib/admin-data";
 
 export type Product = {
   id: string;
@@ -439,7 +439,7 @@ const localProducts: Product[] = rawProducts.map((p) => ({
   image: IMG[p.id],
 }));
 
-function mapRowToProduct(row: ProductRow): Product {
+export function mapRowToProduct(row: ProductRow): Product {
   return {
     id: row.id,
     name: row.name,
@@ -458,13 +458,8 @@ function mapRowToProduct(row: ProductRow): Product {
   };
 }
 
-export async function getProducts(): Promise<Product[]> {
-  try {
-    const rows = await fetchProducts();
-    return rows.map(mapRowToProduct);
-  } catch {
-    return localProducts;
-  }
+export function getProducts(): Product[] {
+  return localProducts;
 }
 
 export function getFeatured(): Product[] {
