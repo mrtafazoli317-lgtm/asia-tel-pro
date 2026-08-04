@@ -1,4 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
+
+const ElasticMesh = lazy(() => import("@/components/effects/ElasticMesh.jsx"));
+
 import { ArrowLeft, Shield, Truck, Headphones, Award, Sparkles, TrendingUp } from "lucide-react";
 import heroImg from "@/assets/hero-iphone.jpg";
 import { SiteLayout } from "@/components/site-layout";
