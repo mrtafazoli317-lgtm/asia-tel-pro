@@ -1,102 +1,58 @@
-import img17ProMax from "@/assets/products/iphone-17-pro-max.png";
-import img17Pro from "@/assets/products/iphone-17-pro.png";
-import img17Air from "@/assets/products/iphone-17-air.png";
-import img17 from "@/assets/products/iphone-17.png";
-
-export type Product = {
-  id: string;
-  name: string;
-  series: string;
-  year: number;
-  price: number;
-  inStock: boolean;
-  storage: string;
-  display: string;
-  chip: string;
-  camera: string;
-  color: string;
-  image: string;
-  featured?: boolean;
-};
+import { createFileRoute } from "@tanstack/react-router";
+import { ProductCard } from "@/components/product-card";
+import { SiteLayout } from "@/components/site-layout";
+import { localProducts } from "@/lib/products";
 
 
-const products: Product[] = [
-  {
-    id:"iphone-17-pro-max",
-    name:"آیفون ۱۷ پرو مکس",
-    series:"iPhone 17",
-    year:2025,
-    price:389900000,
-    inStock:true,
-    storage:"۲۵۶ گیگابایت",
-    display:"۶.۹ اینچ",
-    chip:"A19 Pro",
-    camera:"۴۸ مگاپیکسل",
-    color:"from-slate-900 to-slate-700",
-    image:img17ProMax,
-    featured:true
+export const Route = createFileRoute("/products")({
+  loader: () => {
+    return {
+      products: localProducts,
+    };
   },
 
-  {
-    id:"iphone-17-pro",
-    name:"آیفون ۱۷ پرو",
-    series:"iPhone 17",
-    year:2025,
-    price:319900000,
-    inStock:true,
-    storage:"۲۵۶ گیگابایت",
-    display:"۶.۳ اینچ",
-    chip:"A19 Pro",
-    camera:"۴۸ مگاپیکسل",
-    color:"from-neutral-800 to-neutral-600",
-    image:img17Pro
-  },
+  head: () => ({
+    meta: [
+      {
+        title: "محصولات | آسیا تل پرو",
+      },
+    ],
+  }),
 
-  {
-    id:"iphone-17-air",
-    name:"آیفون ۱۷ ایر",
-    series:"iPhone 17",
-    year:2025,
-    price:279900000,
-    inStock:true,
-    storage:"۲۵۶ گیگابایت",
-    display:"۶.۶ اینچ",
-    chip:"A19",
-    camera:"۴۸ مگاپیکسل",
-    color:"from-sky-200 to-slate-300",
-    image:img17Air
-  },
-
-  {
-    id:"iphone-17",
-    name:"آیفون ۱۷",
-    series:"iPhone 17",
-    year:2025,
-    price:239900000,
-    inStock:true,
-    storage:"۱۲۸ گیگابایت",
-    display:"۶.۱ اینچ",
-    chip:"A19",
-    camera:"۴۸ مگاپیکسل",
-    color:"from-blue-300 to-indigo-400",
-    image:img17
-  }
-];
+  component: ProductsPage,
+});
 
 
-export async function getProducts(){
-  return products;
+function ProductsPage() {
+
+  const { products } = Route.useLoaderData();
+
+
+  return (
+    <SiteLayout>
+
+      <div className="mx-auto max-w-6xl px-4 py-8">
+
+        <h1 className="mb-8 text-center text-3xl font-black">
+          محصولات
+        </h1>
+
+
+        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          {products.map((product) => (
+
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+
+          ))}
+
+        </section>
+
+      </div>
+
+    </SiteLayout>
+  );
 }
-
-
-export function getFeatured(){
-  return products.filter(p=>p.featured);
-}
-
-
-export function formatPrice(price:number){
-  return price.toLocaleString("fa-IR")+" تومان";
-}
-
-
-export {products as localProducts};
