@@ -86,6 +86,81 @@ export type Database = {
         }
         Relationships: []
       }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          image: string | null
+          price: number
+          product_id: string
+          product_name: string
+          quantity: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image?: string | null
+          price: number
+          product_id: string
+          product_name: string
+          quantity?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image?: string | null
+          price?: number
+          product_id?: string
+          product_name?: string
+          quantity?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          note: string | null
+          product_id: string | null
+          product_name: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          note?: string | null
+          product_id?: string | null
+          product_name: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          note?: string | null
+          product_id?: string | null
+          product_name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           camera: string
@@ -140,6 +215,83 @@ export type Database = {
           storage?: string
           updated_at?: string
           year?: number
+        }
+        Relationships: []
+      }
+      purchase_order_items: {
+        Row: {
+          id: string
+          order_id: string
+          price: number
+          product_id: string
+          product_name: string
+          quantity: number
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          price: number
+          product_id: string
+          product_name: string
+          quantity: number
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          price?: number
+          product_id?: string
+          product_name?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase_orders: {
+        Row: {
+          address: string
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          status: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+          zarinpal_authority: string | null
+          zarinpal_ref_id: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+          zarinpal_authority?: string | null
+          zarinpal_ref_id?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+          zarinpal_authority?: string | null
+          zarinpal_ref_id?: string | null
         }
         Relationships: []
       }

@@ -1,10 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
+
+const ElasticMesh = lazy(() => import("@/components/effects/ElasticMesh.jsx"));
+
 import { ArrowLeft, Shield, Truck, Headphones, Award, Sparkles, TrendingUp } from "lucide-react";
 import heroImg from "@/assets/hero-iphone.jpg";
 import { SiteLayout } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { ReviewsSection } from "@/components/reviews-section";
-import { getFeatured } from "@/lib/products";
+import { useLiveProducts } from "@/lib/use-live-products";
 import { siteConfig } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -22,7 +26,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const featured = getFeatured();
+  const allProducts = useLiveProducts();
+  const featured = allProducts.filter((p) => p.featured);
 
   return (
     <SiteLayout>
@@ -32,6 +37,25 @@ function Home() {
           <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-primary/30 blur-3xl" />
           <div className="absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-primary-glow/20 blur-3xl" />
         </div>
+
+        <div className="pointer-events-none absolute inset-0 opacity-30">
+          <ClientOnly fallback={null}>
+            <Suspense fallback={null}>
+              <ElasticMesh
+                color1="#FF6B00"
+                color2="#1a1a1a"
+                highlight="#ffffff"
+                gridOpacity={0.18}
+                gridDensity={16}
+                borderRadius={0}
+                shading={0.6}
+                resolution={18}
+                className="pointer-events-auto"
+              />
+            </Suspense>
+          </ClientOnly>
+        </div>
+
 
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-6 lg:px-8 lg:py-24">
           <div className="animate-fade-up">
