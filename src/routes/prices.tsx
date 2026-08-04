@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CalendarClock, TrendingDown, TrendingUp } from "lucide-react";
 import { SiteLayout } from "@/components/site-layout";
 import { PageHero } from "./products";
-import { formatPrice, getProducts } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
+import { useLiveProducts } from "@/lib/use-live-products";
 
 export const Route = createFileRoute("/prices")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/prices")({
 });
 
 function PricesPage() {
-  const products = getProducts();
+  const products = useLiveProducts();
   const today = new Date().toLocaleDateString("fa-IR");
 
   return (

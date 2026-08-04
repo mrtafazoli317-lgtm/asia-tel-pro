@@ -3,6 +3,7 @@ import { ArrowLeft, Phone, MessageCircle, Shield, Truck, Award, CheckCircle2, XC
 import { SiteLayout } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { formatPrice, getProducts, type Product } from "@/lib/products";
+import { useLiveProducts } from "@/lib/use-live-products";
 import { siteConfig } from "@/lib/site-config";
 
 export const Route = createFileRoute("/products/$id")({
@@ -65,8 +66,10 @@ export const Route = createFileRoute("/products/$id")({
 });
 
 function ProductDetailPage() {
-  const { product } = Route.useLoaderData();
-  const related = getProducts().filter((p) => p.series === product.series && p.id !== product.id).slice(0, 4);
+  const { product: staticProduct } = Route.useLoaderData();
+  const all = useLiveProducts();
+  const product = all.find((p) => p.id === staticProduct.id) ?? staticProduct;
+  const related = all.filter((p) => p.series === product.series && p.id !== product.id).slice(0, 4);
 
   const waLink = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(
     `سلام، در مورد ${product.name} می‌خواستم راهنمایی بگیرم.`

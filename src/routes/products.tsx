@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { SiteLayout } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
-import { getProducts } from "@/lib/products";
+import { useLiveProducts } from "@/lib/use-live-products";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
-  const all = getProducts();
+  const all = useLiveProducts();
   const series = useMemo(() => ["همه", ...Array.from(new Set(all.map((p) => p.series)))], [all]);
   const [active, setActive] = useState<string>("همه");
   const [q, setQ] = useState("");

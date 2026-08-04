@@ -4,7 +4,7 @@ import heroImg from "@/assets/hero-iphone.jpg";
 import { SiteLayout } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { ReviewsSection } from "@/components/reviews-section";
-import { getFeatured } from "@/lib/products";
+import { useLiveProducts } from "@/lib/use-live-products";
 import { siteConfig } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -22,7 +22,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const featured = getFeatured();
+  const allProducts = useLiveProducts();
+  const featured = allProducts.filter((p) => p.featured);
 
   return (
     <SiteLayout>
