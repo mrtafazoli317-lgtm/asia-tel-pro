@@ -34,6 +34,25 @@ function Home() {
           <div className="absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-primary-glow/20 blur-3xl" />
         </div>
 
+        <div className="pointer-events-none absolute inset-0 opacity-30">
+          <ClientOnly fallback={null}>
+            <Suspense fallback={null}>
+              <ElasticMesh
+                color1="#FF6B00"
+                color2="#1a1a1a"
+                highlight="#ffffff"
+                gridOpacity={0.18}
+                gridDensity={16}
+                borderRadius={0}
+                shading={0.6}
+                resolution={18}
+                className="pointer-events-auto"
+              />
+            </Suspense>
+          </ClientOnly>
+        </div>
+
+
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-6 lg:px-8 lg:py-24">
           <div className="animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
